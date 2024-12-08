@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import Canvas from "./Canvas";
+import TransformControls from "./TransformControls";
+import { saveFigures, loadFigures } from "./localStorage";
 
-function App() {
+const App = () => {
+  const [figures, setFigures] = useState(loadFigures() || []);
+  const [selectedFigure, setSelectedFigure] = useState(null);
+
+  const handleFigureUpdate = (updatedFigure, index) => {
+    const newFigures = [...figures];
+    newFigures[index] = updatedFigure;
+    setFigures(newFigures);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ display: "flex", flexDirection: "row" }}>
+      <Canvas
+        figures={figures}
+        setFigures={setFigures}
+        selectedFigure={selectedFigure}
+        setSelectedFigure={setSelectedFigure}
+      />
+      <TransformControls
+        selectedFigure={selectedFigure}
+        setFigures={setFigures}
+        figures={figures}
+        handleFigureUpdate={handleFigureUpdate}
+        onSave={() => saveFigures(figures)}
+        onLoad={() => setFigures(loadFigures() || [])}
+      />
     </div>
   );
-}
+};
 
 export default App;
