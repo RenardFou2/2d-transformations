@@ -5,6 +5,7 @@ const TransformControls = ({ selectedFigure, figures, setFigures, onSave, onLoad
   const [vector, setVector] = useState({ x: 0, y: 0 });
   const [angle, setAngle] = useState(0);
   const [scale, setScale] = useState(1);
+  const [pivot, setPivot] = useState({ x: 0, y: 0 });
 
   const handleTransform = (type) => {
     if (selectedFigure === null || selectedFigure < 0) {
@@ -18,9 +19,9 @@ const TransformControls = ({ selectedFigure, figures, setFigures, onSave, onLoad
     if (type === "translate") {
       updatedFigures[selectedFigure] = translateFigure(figure, vector);
     } else if (type === "rotate") {
-      updatedFigures[selectedFigure] = rotateFigure(figure, { x: 0, y: 0 }, angle);
+      updatedFigures[selectedFigure] = rotateFigure(figure, pivot, angle);
     } else if (type === "scale") {
-      updatedFigures[selectedFigure] = scaleFigure(figure, { x: 0, y: 0 }, scale);
+      updatedFigures[selectedFigure] = scaleFigure(figure, pivot, scale);
     }
 
     setFigures(updatedFigures);
@@ -54,6 +55,20 @@ const TransformControls = ({ selectedFigure, figures, setFigures, onSave, onLoad
           value={angle}
           onChange={(e) => setAngle(parseFloat(e.target.value))}
         />
+        <div>
+          <input
+            type="number"
+            placeholder="Pivot X"
+            value={pivot.x}
+            onChange={(e) => setPivot({ ...pivot, x: parseFloat(e.target.value) })}
+          />
+          <input
+            type="number"
+            placeholder="Pivot Y"
+            value={pivot.y}
+            onChange={(e) => setPivot({ ...pivot, y: parseFloat(e.target.value) })}
+          />
+        </div>
         <button onClick={() => handleTransform("rotate")}>Apply</button>
       </div>
 
