@@ -27,6 +27,30 @@ const TransformControls = ({ selectedFigure, figures, setFigures, onSave, onLoad
     setFigures(updatedFigures);
   };
 
+  const saveToFile = (figures) => {
+    const blob = new Blob([JSON.stringify(figures, null, 2)], { type: 'application/json' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'figures.json';
+    link.click();
+  };
+
+  const loadFromFile = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const loadedFigures = JSON.parse(e.target.result);
+          setFigures(loadedFigures);
+        } catch (error) {
+          alert('Błąd wczytywania pliku');
+        }
+      };
+      reader.readAsText(file);
+    }
+  };
+
   return (
     <div style={{ marginLeft: "20px" }}>
       <h3>Transform Controls</h3>
@@ -84,8 +108,8 @@ const TransformControls = ({ selectedFigure, figures, setFigures, onSave, onLoad
       </div>
 
       <div>
-        <button onClick={onSave}>Save Figures</button>
-        <button onClick={onLoad}>Load Figures</button>
+        <button onClick={() => saveToFile(figures)}>Save to File</button>
+        <input type="file" onChange={loadFromFile} />
       </div>
     </div>
   );
